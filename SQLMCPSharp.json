@@ -1,0 +1,68 @@
+{
+  "Sql": {
+    "ReadOnly": true,
+    "AllowDangerous": false,
+    "CommandTimeoutSeconds": 30,
+    "MaxRows": 10000,
+    "MaxCellChars": 8000,
+    "Mssql": {
+      "Enabled": false,
+      "DefaultAlias": "",
+      "Servers": []
+    },
+    "Mysql": {
+      "Enabled": false,
+      "DefaultAlias": "",
+      "Servers": []
+    },
+    "Sqlite": {
+      "Enabled": false,
+      "DefaultAlias": "",
+      "Servers": []
+    },
+    "Oracle": {
+      "Enabled": false,
+      "DefaultAlias": "",
+      "Servers": []
+    }
+  },
+  "Server": {
+    "Host": "localhost",
+    "Port": 5712,
+    "Path": "/mcp",
+    "WindowsServiceName": "SQLMCPSharp",
+    "Password": ""
+  },
+  "Serilog": {
+    "_audit_note": "Every mutating tool emits a structured 'SQL audit:' log line with SourceContext='SqlAudit'. To route those to a separate file see README → 'Audit log routing'.",
+    "MinimumLevel": {
+      "Default": "Information",
+      "Override": {
+        "Microsoft": "Warning",
+        "Microsoft.Hosting.Lifetime": "Information",
+        "System": "Warning"
+      }
+    },
+    "WriteTo": [
+      {
+        "Name": "Console",
+        "Args": {
+          "outputTemplate": "[{Timestamp:HH:mm:ss} {Level:u3}] {SourceContext}: {Message:lj}{NewLine}{Exception}"
+        }
+      },
+      {
+        "Name": "File",
+        "Args": {
+          "path": "logs/sqlmcp-.log",
+          "rollingInterval": "Day",
+          "retainedFileCountLimit": 14,
+          "fileSizeLimitBytes": 52428800,
+          "rollOnFileSizeLimit": true,
+          "shared": true,
+          "outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {SourceContext}: {Message:lj}{NewLine}{Exception}"
+        }
+      }
+    ],
+    "Enrich": [ "FromLogContext", "WithMachineName", "WithProcessId", "WithThreadId" ]
+  }
+}
